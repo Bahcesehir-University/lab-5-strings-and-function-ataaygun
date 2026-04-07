@@ -11,14 +11,16 @@ private:
     string data;
 
 public:
-    MyString() { data = ""; }
-    MyString(const string& str) { data = str; }
-    MyString(const char* str) { data = string(str); }
+    MyString() : data("") {}
+    MyString(const string& str) : data(str) {}
+    MyString(const char* str) : data(str) {}
 
-    string getData() const { return data; }
+    string getData() const {
+        return data;
+    }
 
     int length() const {
-        return static_cast<int>(data.length());
+        return (int)data.length();
     }
 
     char charAt(int index) const {
@@ -63,14 +65,13 @@ public:
     int find(const MyString& target) const {
         size_t pos = data.find(target.data);
         if (pos == string::npos) return -1;
-        return static_cast<int>(pos);
+        return (int)pos;
     }
 
     int count(char ch) const {
         int cnt = 0;
-        for (char c : data) {
+        for (char c : data)
             if (c == ch) cnt++;
-        }
         return cnt;
     }
 
@@ -92,9 +93,8 @@ public:
 
     MyString replace(char oldCh, char newCh) const {
         string result = data;
-        for (char& c : result) {
+        for (char& c : result)
             if (c == oldCh) c = newCh;
-        }
         return MyString(result);
     }
 
@@ -116,6 +116,18 @@ public:
         return data == other.data;
     }
 
+    bool operator!=(const MyString& other) const {
+        return data != other.data;
+    }
+
+    bool operator<(const MyString& other) const {
+        return data < other.data;
+    }
+
+    bool operator>(const MyString& other) const {
+        return data > other.data;
+    }
+
     char operator[](int index) const {
         if (index < 0 || index >= (int)data.length())
             throw out_of_range("Index out of range");
@@ -125,9 +137,8 @@ public:
     MyString operator*(int times) const {
         if (times <= 0) return MyString("");
         string result;
-        for (int i = 0; i < times; i++) {
+        for (int i = 0; i < times; i++)
             result += data;
-        }
         return MyString(result);
     }
 
@@ -135,17 +146,9 @@ public:
         os << s.data;
         return os;
     }
+
+    friend istream& operator>>(istream& is, MyString& s) {
+        is >> s.data;
+        return is;
+    }
 };
-
-int main() {
-    MyString s1(" Hello World ");
-
-    cout << "Original: [" << s1 << "]" << endl;
-    cout << "Trim: [" << s1.trim() << "]" << endl;
-    cout << "Upper: " << s1.toUpperCase() << endl;
-    cout << "Lower: " << s1.toLowerCase() << endl;
-    cout << "Reverse: " << s1.reverse() << endl;
-    cout << "Length: " << s1.length() << endl;
-
-    return 0;
-}
